@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -92,15 +91,12 @@ public class TestClass2 {
                               }
                           }
 
-        ).flatMap(new Function<Integer, ObservableSource<String>>() {
-            @Override
-            public ObservableSource<String> apply(Integer value) throws Exception {
-                final List<String> stringList = new ArrayList<>();
-                for (int i = 0; i < 3; i++) {
-                    stringList.add("我是第" + i + "个" + value);
-                }
-                return Observable.fromIterable(stringList).delay(10, TimeUnit.SECONDS);
+        ).flatMap(value -> {
+            final List<String> stringList = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                stringList.add("我是第" + i + "个" + value);
             }
+            return Observable.fromIterable(stringList).delay(10, TimeUnit.SECONDS);
         }).subscribe(new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
